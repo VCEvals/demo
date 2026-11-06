@@ -53,6 +53,14 @@ for src_name, out_name in PAGES.items():
     body = unwrap("sc-if", {"value": "data-if"}, body)
     for a, b in PAGES.items():
         body = body.replace('href="%s"' % a, 'href="%s"' % b)
+    scripts = '<script src="dc-lite.js"></script>'
+    if out_name == "index.html":
+        # Live Google map replaces the drawn illustration on the website.
+        body, n = re.subn(r'<svg width="100%" height="220".*?</svg>', '<div id="gmap-slot" style="position: absolute; inset: 0"></div>', body, flags=re.S)
+        assert n == 1, "route map svg not found"
+        body = body.replace('position: relative; height: 220px; background: #F2F4F6', 'position: relative; height: 380px; background: #F2F4F6', 1)
+        body = body.replace('position: absolute; right: 8px; bottom: 8px;', 'position: absolute; z-index: 2; right: 8px; bottom: 24px;', 1)
+        scripts = '<script src="config.js"></script>\n<script src="maps.js"></script>\n' + scripts
     logic = re.search(r"<script type=\"text/x-dc\"[^>]*>(.*?)</script>", s, re.S).group(1)
     css = EXTRA_CSS.get(out_name, "")
     page = f"""<!doctype html>
@@ -68,7 +76,7 @@ for src_name, out_name in PAGES.items():
 <div id="dc-root"></div>
 <template id="dc-template">{body}</template>
 <script type="text/plain" id="dc-logic">{logic}</script>
-<script src="dc-lite.js"></script>
+{scripts}
 </body>
 </html>
 """
@@ -76,3 +84,6 @@ for src_name, out_name in PAGES.items():
     print("built", out_name)
 
 shutil.copy(here / "dc-lite.js", out_dir / "dc-lite.js")
+shutil.copy(here / "maps.js", out_dir / "maps.js")
+if not (out_dir / "config.js").exists():
+    (out_dir / "config.js").write_text("window.MEDROUTE_CONFIG = { googleMapsApiKey: '' };\n")

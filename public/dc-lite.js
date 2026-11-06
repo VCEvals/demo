@@ -94,6 +94,7 @@
       const frag = document.createDocumentFragment();
       for (const c of Array.from(tpl.content.childNodes)) renderNode(c, vals, frag);
       root.replaceChildren(frag);
+      if (window.dcAfterRender) window.dcAfterRender(root);
       const now = root.querySelectorAll('input,select,textarea');
       if (now.length === fields.length) {
         now.forEach((f, i) => {

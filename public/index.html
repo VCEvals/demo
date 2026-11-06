@@ -112,22 +112,9 @@ a{color:#1A5A96}a:hover{color:#0E3F6E}
 <h2 style="margin: 0; font-size: 14px; font-weight: 700">Route Map</h2>
 <span style="font-size: 12px; color: #4A5664">Henrico · Richmond · Chesterfield</span>
 </div>
-<div style="position: relative; height: 220px; background: #F2F4F6">
-<svg width="100%" height="220" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Map of active routes across Richmond, Henrico and Chesterfield">
-<path d="M0 40 H800 M0 90 H800 M0 140 H800 M0 190 H800 M100 0 V220 M220 0 V220 M340 0 V220 M460 0 V220 M580 0 V220 M700 0 V220" stroke="#E0E5EA" stroke-width="1"></path>
-<path d="M0 130 C200 100 300 170 520 120 S760 100 800 95" fill="none" stroke="#C9D6E2" stroke-width="14"></path>
-<path d="M120 200 L260 120 L360 105 L470 60 L600 42" fill="none" stroke="#1A5A96" stroke-width="3"></path>
-<path d="M90 60 L210 80 L330 150 L450 175 L620 185" fill="none" stroke="#8A4B00" stroke-width="3" stroke-dasharray="8 5"></path>
-<path d="M500 205 L560 140 L660 125 L740 80" fill="none" stroke="#5A6878" stroke-width="3"></path>
-<rect x="352" y="97" width="16" height="16" fill="#1A5A96" stroke="#FFFFFF" stroke-width="2"></rect>
-<rect x="322" y="142" width="16" height="16" fill="#8A4B00" stroke="#FFFFFF" stroke-width="2"></rect>
-<rect x="652" y="117" width="16" height="16" fill="#5A6878" stroke="#FFFFFF" stroke-width="2"></rect>
-<rect x="582" y="26" width="40" height="22" fill="#1B2430"></rect>
-<text x="602" y="41" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#FFFFFF">LAB</text>
-<circle cx="250" cy="105" r="10" fill="#FFFFFF" stroke="#A4161A" stroke-width="3"></circle>
-<text x="250" y="88" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#A4161A">STAT</text>
-</svg>
-<div style="position: absolute; right: 8px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 12px; background: #FFFFFF; border: 1px solid #C9D3DD; padding: 4px 10px; font-size: 12px">
+<div style="position: relative; height: 380px; background: #F2F4F6">
+<div id="gmap-slot" style="position: absolute; inset: 0"></div>
+<div style="position: absolute; z-index: 2; right: 8px; bottom: 24px; display: flex; flex-wrap: wrap; gap: 12px; background: #FFFFFF; border: 1px solid #C9D3DD; padding: 4px 10px; font-size: 12px">
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; background: #1A5A96; display: inline-block"></span>Specimen (Cat B)</span>
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 0; border-top: 3px dashed #8A4B00; display: inline-block"></span>Reg. medical waste</span>
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; background: #5A6878; display: inline-block"></span>General</span>
@@ -234,6 +221,8 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script src="config.js"></script>
+<script src="maps.js"></script>
 <script src="dc-lite.js"></script>
 </body>
 </html>
