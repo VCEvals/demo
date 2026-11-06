@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedRoute — Dispatch board</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E8ECF0}
+a{color:#1A5A96}a:hover{color:#0E3F6E}
+</style>
+</helmet>
+<div style="font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1B2430; background: #E8ECF0; min-height: 100vh">
+
+<div style="background: #1A4E80; color: #FFFFFF; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="22" height="22" rx="2" fill="#FFFFFF"></rect><path d="M9 4h4v5h5v4h-5v5H9v-5H4V9h5z" fill="#1A4E80"></path></svg>
+<span style="font-weight: 700; font-size: 16px">MedRoute</span>
+<span style="font-size: 13px; color: #CFE0F0">Courier Logistics · Richmond Metro Hub</span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #CFE0F0">
+<span>Fri 06-Nov-2026 13:18</span>
+<span>Dispatcher: A. Reyes</span>
+<button type="button" style="min-height: 32px; padding: 0 10px; border: 1px solid #7FA6CB; background: transparent; color: #FFFFFF; border-radius: 2px; font: 600 13px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Log out</button>
+</div>
+</div>
+
+<nav aria-label="Modules" style="background: #F7F9FB; border-bottom: 1px solid #AEBBC8; display: flex; flex-wrap: wrap; padding: 0 12px">
+<a href="Main.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; font-weight: 700; color: #1A4E80; text-decoration: none; background: #FFFFFF; border-left: 1px solid #AEBBC8; border-right: 1px solid #AEBBC8; border-top: 3px solid #1A4E80; margin-bottom: -1px">Dispatch Board</a>
+<a href="Compliance.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Compliance</a>
+<a href="DriverApp.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Driver Handheld</a>
+<a href="Portal.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Client Portal</a>
+<a href="#reports" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Reports</a>
+</nav>
+
+<div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px">
+<span><span style="color: #4A5664">Hub:</span> <strong>Richmond Metro</strong></span>
+<span><span style="color: #4A5664">Shift:</span> <strong>07:00–19:00</strong></span>
+<span><span style="color: #4A5664">Drivers on duty:</span> <strong>10</strong></span>
+<span><span style="color: #4A5664">Open STAT:</span> <strong style="color: #A4161A">1</strong></span>
+<span><span style="color: #4A5664">Mode:</span> <strong style="color: #8A4B00">SIMULATION — sample data</strong></span>
+</div>
+
+<main style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px; max-width: 1600px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px">
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Dispatch Board</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<button type="button" style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #8C9AA8; background: #FFFFFF; color: #1B2430; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">New Pickup</button>
+<button type="button" style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #8C9AA8; background: #FFFFFF; color: #1B2430; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Print Manifests</button>
+<button type="button" onClick="{{ optimize }}" style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #14406A; background: #1A5A96; color: #FFFFFF; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">{{ optimizeLabel }}</button>
+</div>
+</div>
+
+<section aria-label="Shift summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: #FFFFFF; border: 1px solid #AEBBC8">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div style="padding: 10px 14px; border-right: 1px solid #D5DDE5">
+<div style="font-size: 12px; color: #4A5664; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em">{{ k.label }}</div>
+<div style="margin-top: 2px; font-size: 24px; font-weight: 700">{{ k.value }}</div>
+<div style="font-size: 12px; color: #4A5664">{{ k.sub }}</div>
+</div>
+</sc-for>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+
+<section aria-label="Active routes" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Active Routes (10)</h2>
+<span style="font-size: 12px; color: #4A5664">Auto-optimized 13:15 · next refresh 13:20</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB; color: #2E3A48">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Rte</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Driver</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Unit</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Load Class</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Stops</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Next ETA</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Temp</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Status</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ routes }}" as="r" hint-placeholder-count="8">
+<tr style="{{ r.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 700">{{ r.rte }}</td>
+<td style="padding: 6px 8px">{{ r.driver }}</td>
+<td style="padding: 6px 8px">{{ r.unit }}</td>
+<td style="padding: 6px 8px">{{ r.load }}</td>
+<td style="padding: 6px 8px">{{ r.stops }}</td>
+<td style="padding: 6px 8px">{{ r.eta }}</td>
+<td style="padding: 6px 8px">{{ r.temp }}</td>
+<td style="padding: 6px 12px 6px 8px"><span style="{{ r.statusStyle }}">{{ r.status }}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-label="Route map" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Route Map</h2>
+<span style="font-size: 12px; color: #4A5664">Henrico · Richmond · Chesterfield</span>
+</div>
+<div style="position: relative; height: 220px; background: #F2F4F6">
+<svg width="100%" height="220" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Map of active routes across Richmond, Henrico and Chesterfield">
+<path d="M0 40 H800 M0 90 H800 M0 140 H800 M0 190 H800 M100 0 V220 M220 0 V220 M340 0 V220 M460 0 V220 M580 0 V220 M700 0 V220" stroke="#E0E5EA" stroke-width="1"></path>
+<path d="M0 130 C200 100 300 170 520 120 S760 100 800 95" fill="none" stroke="#C9D6E2" stroke-width="14"></path>
+<path d="M120 200 L260 120 L360 105 L470 60 L600 42" fill="none" stroke="#1A5A96" stroke-width="3"></path>
+<path d="M90 60 L210 80 L330 150 L450 175 L620 185" fill="none" stroke="#8A4B00" stroke-width="3" stroke-dasharray="8 5"></path>
+<path d="M500 205 L560 140 L660 125 L740 80" fill="none" stroke="#5A6878" stroke-width="3"></path>
+<rect x="352" y="97" width="16" height="16" fill="#1A5A96" stroke="#FFFFFF" stroke-width="2"></rect>
+<rect x="322" y="142" width="16" height="16" fill="#8A4B00" stroke="#FFFFFF" stroke-width="2"></rect>
+<rect x="652" y="117" width="16" height="16" fill="#5A6878" stroke="#FFFFFF" stroke-width="2"></rect>
+<rect x="582" y="26" width="40" height="22" fill="#1B2430"></rect>
+<text x="602" y="41" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#FFFFFF">LAB</text>
+<circle cx="250" cy="105" r="10" fill="#FFFFFF" stroke="#A4161A" stroke-width="3"></circle>
+<text x="250" y="88" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#A4161A">STAT</text>
+</svg>
+<div style="position: absolute; right: 8px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 12px; background: #FFFFFF; border: 1px solid #C9D3DD; padding: 4px 10px; font-size: 12px">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; background: #1A5A96; display: inline-block"></span>Specimen (Cat B)</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 0; border-top: 3px dashed #8A4B00; display: inline-block"></span>Reg. medical waste</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; background: #5A6878; display: inline-block"></span>General</span>
+</div>
+</div>
+</section>
+</div>
+
+<aside style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+
+<section aria-label="STAT request" style="background: #FFFFFF; border: 1px solid #A4161A">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #A4161A; color: #FFFFFF; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">STAT Request · #ST-1104</h2>
+<span style="font-size: 12px">Rcvd 13:04 · due 13:34</span>
+</div>
+<div style="padding: 10px 12px">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<tbody>
+<tr><td style="padding: 3px 0; color: #4A5664; width: 96px">Pickup</td><td style="padding: 3px 0; font-weight: 600">Westpark Family Medicine</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Deliver to</td><td style="padding: 3px 0; font-weight: 600">James River Reference Lab</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Contents</td><td style="padding: 3px 0">Blood culture × 3 · UN3373 Cat B</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Handling</td><td style="padding: 3px 0">Refrigerated 2–8 °C</td></tr>
+</tbody>
+</table>
+<div style="margin-top: 8px; border: 1px solid #9DBAD6; background: #EEF4FA; padding: 8px 10px; font-size: 13px; line-height: 1.45">
+<div style="font-weight: 700; color: #14406A">Recommended assignment</div>
+<div>Rte 03 · M. Alvarez · Van 3 — insert after stop 6. +6 min to route. Pickup 13:15, lab arrival 13:31. Driver certified; cooler 4.8 °C.</div>
+</div>
+<sc-if value="{{ statPending }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap">
+<button type="button" onClick="{{ acceptStat }}" style="flex: 1 1 140px; min-height: 36px; border-radius: 2px; border: 1px solid #14406A; background: #1A5A96; color: #FFFFFF; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Accept &amp; Dispatch</button>
+<button type="button" style="flex: 1 1 140px; min-height: 36px; border-radius: 2px; border: 1px solid #8C9AA8; background: #FFFFFF; color: #1B2430; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Other Options (2)</button>
+</div>
+</sc-if>
+<sc-if value="{{ statAccepted }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="margin-top: 10px; border: 1px solid #7FB48D; background: #EAF5EC; color: #1E5B2C; padding: 8px 10px; font-size: 13px; font-weight: 600">Assigned to Rte 03 at 13:18 · client notified · tracking link sent</div>
+</sc-if>
+</div>
+</section>
+
+<section aria-label="Alerts" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Alerts (4)</h2>
+<a href="Compliance.dc.html" style="font-size: 13px; font-weight: 600">Compliance</a>
+</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<tbody>
+<sc-for list="{{ alerts }}" as="a" hint-placeholder-count="4">
+<tr style="border-bottom: 1px solid #E1E6EB; vertical-align: top">
+<td style="padding: 8px 6px 8px 12px; width: 64px"><span style="{{ a.chipStyle }}">{{ a.level }}</span></td>
+<td style="padding: 8px 12px 8px 4px">
+<div style="font-weight: 700">{{ a.title }}</div>
+<div style="color: #3A4654; line-height: 1.4">{{ a.detail }}</div>
+</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</section>
+
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { stat: 'pending', optimized: false };
+  }
+  renderVals() {
+    const chip = (bg, fg, bd) => 'display:inline-block;padding:1px 6px;border:1px solid ' + bd + ';background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;border-radius:2px;white-space:nowrap';
+    const st = {
+      'On Time': chip('#EAF5EC', '#1E5B2C', '#7FB48D'),
+      'Delayed': chip('#FFF4DC', '#7A4300', '#E0B45C'),
+      'Hold': chip('#FCEBEB', '#A4161A', '#E29A9C')
+    };
+    const raw = [
+      ['01', 'Okafor, D.', 'Van 1', 'Specimen', '9/14', '13:22', '5.1 °C', 'On Time'],
+      ['02', 'Kim, S.', 'Car 2', 'General', '11/18', '13:15', '—', 'On Time'],
+      ['03', 'Alvarez, M.', 'Van 3', 'Specimen', '6/15', '13:18', '4.8 °C', 'On Time'],
+      ['04', 'Patel, R.', 'Van 4', 'Specimen', '7/16', '13:26', '8.6 °C', 'Delayed'],
+      ['05', 'Brooks, K.', 'Van 5', 'RMW', '0/6', '—', '—', 'Hold'],
+      ['06', 'Harris, J.', 'Van 6', 'Specimen', '10/13', '13:20', '4.2 °C', 'On Time'],
+      ['07', 'Nguyen, T.', 'Truck 7', 'RMW', '4/8', '13:40', '—', 'Delayed'],
+      ['08', 'Wallace, L.', 'Car 8', 'General', '12/17', '13:24', '—', 'On Time']
+    ];
+    const routes = raw.map((r, i) => ({ rte: r[0], driver: r[1], unit: r[2], load: r[3], stops: r[4], eta: r[5], temp: r[6], status: r[7], statusStyle: st[r[7]], rowStyle: 'border-bottom:1px solid #E1E6EB;background:' + (i % 2 ? '#F7F9FB' : '#FFFFFF') }));
+    const alerts = [
+      { level: 'HIGH', chipStyle: chip('#FCEBEB', '#A4161A', '#E29A9C'), title: 'Truck 7 — RMW on board 19 h 40 m', detail: 'Unload by 24 h or the vehicle counts as a transfer station (9VAC20-121-150 I). Suggest: go to treatment facility next.' },
+      { level: 'HIGH', chipStyle: chip('#FCEBEB', '#A4161A', '#E29A9C'), title: 'Van 5 — spill kit check missing', detail: 'RMW assignments blocked until pre-trip check is logged.' },
+      { level: 'MED', chipStyle: chip('#FFF4DC', '#7A4300', '#E0B45C'), title: 'Rte 04 cooler 8.6 °C', detail: 'Above 2–8 °C for 6 min. Driver notified 13:12.' },
+      { level: 'LOW', chipStyle: chip('#EEF4FA', '#14406A', '#9DBAD6'), title: 'Okafor, D. — DOT hazmat due in 12 days', detail: 'Refresher enrollment sent.' }
+    ];
+    const kpis = [
+      { label: 'Stops Completed', value: '142 / 186', sub: '76% of plan' },
+      { label: 'On-Time Rate', value: '97.2%', sub: 'Target 95.0% · 7-day 96.4%' },
+      { label: 'Miles Saved (Optimizer)', value: this.state.optimized ? '71 mi' : '63 mi', sub: 'vs. manual plan' },
+      { label: 'Compliance Score', value: '94', sub: '2 high-priority items open' }
+    ];
+    return {
+      kpis, routes, alerts,
+      statPending: this.state.stat === 'pending',
+      statAccepted: this.state.stat === 'accepted',
+      acceptStat: () => this.setState({ stat: 'accepted' }),
+      optimize: () => this.setState({ optimized: true }),
+      optimizeLabel: this.state.optimized ? 'Optimized 13:18 (+8 mi)' : 'Re-optimize Routes'
+    };
+  }
+}
+</script>
+</body>
+</html>

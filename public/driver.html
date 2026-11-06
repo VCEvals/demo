@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedRoute handheld — specimen pickup</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A5A96}a:hover{color:#0E3F6E}
+</style>
+
+<style>body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:24px 0;background:#C9D1DA}#dc-root>div{box-shadow:0 2px 12px rgba(0,0,0,.18)}</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+
+<div style="width: 390px; height: 844px; box-sizing: border-box; font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif; color: #1B2430; background: #E8ECF0; display: flex; flex-direction: column; overflow: hidden">
+
+<div style="background: #1A4E80; color: #FFFFFF; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center">
+<a href="index.html" style="color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none; min-height: 44px; display: flex; align-items: center">‹ Rte 03</a>
+<span style="font-size: 15px; font-weight: 700">Stop 7 / 16</span>
+<span style="font-size: 13px; color: #CFE0F0">13:15</span>
+</div>
+
+<div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 12px; font-size: 13px; line-height: 1.45">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<strong style="font-size: 16px">Westpark Family Medicine</strong>
+<span style="padding: 1px 6px; border: 1px solid #E29A9C; background: #FCEBEB; color: #A4161A; font-size: 12px; font-weight: 700; border-radius: 2px">STAT</span>
+</div>
+<div>Pickup · Blood culture × 3 · UN3373 Cat B</div>
+<div>Deliver: James River Reference Lab by <strong>13:34</strong></div>
+</div>
+
+<div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column">
+
+<table style="width: 100%; border-collapse: collapse; font-size: 14px; background: #FFFFFF; border-bottom: 1px solid #AEBBC8">
+<tbody>
+<tr style="border-bottom: 1px solid #E1E6EB"><td style="padding: 8px 12px; color: #4A5664">Cooler A temp</td><td style="padding: 8px 12px; text-align: right"><strong style="color: #1E5B2C">4.8 °C</strong> · in range</td></tr>
+<tr><td style="padding: 8px 12px; color: #4A5664">ETA to lab</td><td style="padding: 8px 12px; text-align: right"><strong>13:31</strong> · 3 min buffer</td></tr>
+</tbody>
+</table>
+
+<div style="padding: 10px 12px 4px; font-size: 12px; font-weight: 700; color: #4A5664; text-transform: uppercase; letter-spacing: 0.04em">Pickup Checklist ({{ doneCount }}/4)</div>
+
+<div style="background: #FFFFFF; border-top: 1px solid #AEBBC8; border-bottom: 1px solid #AEBBC8">
+<button data-for="steps" data-as="s" type="button" onClick="{{ s.toggle }}" aria-pressed="{{ s.done }}" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 8px 12px; border: 0; border-bottom: 1px solid #E1E6EB; background: #FFFFFF; cursor: pointer; font-family: 'Source Sans 3', Arial, sans-serif; text-align: left">
+<span style="{{ s.boxStyle }}" aria-hidden="true">{{ s.mark }}</span>
+<span style="display: flex; flex-direction: column">
+<span style="font-size: 15px; font-weight: 600; color: #1B2430">{{ s.title }}</span>
+<span style="font-size: 13px; color: #4A5664">{{ s.detail }}</span>
+</span>
+</button>
+</div>
+
+<div style="margin: 10px 12px; padding: 8px 10px; border: 1px solid #E0B45C; background: #FFF4DC; color: #5C3300; font-size: 13px; line-height: 1.4">Spill or damaged bag: stop, put on gloves, use the spill kit, then tap Report Incident.</div>
+</div>
+
+<div style="padding: 10px 12px 22px; background: #F7F9FB; border-top: 1px solid #AEBBC8; display: flex; gap: 8px">
+<button type="button" style="min-height: 48px; padding: 0 14px; border-radius: 2px; border: 1px solid #A4161A; background: #FFFFFF; color: #A4161A; font: 700 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Report Incident</button>
+<button type="button" onClick="{{ complete }}" style="{{ completeStyle }}">{{ completeLabel }}</button>
+</div>
+</div>
+</template>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { done: { scan: true, temp: true, sign: false, photo: false }, finished: false };
+  }
+  renderVals() {
+    const d = this.state.done;
+    const list = [
+      { id: 'scan', title: 'Scan specimen bags', detail: '3/3 scanned · VA-2611-0487 – 0489' },
+      { id: 'temp', title: 'Verify cooler temperature', detail: 'Logger 4.8 °C · auto-recorded' },
+      { id: 'sign', title: 'Capture releasing staff signature', detail: 'Name + signature required' },
+      { id: 'photo', title: 'Photo of sealed cooler', detail: 'UN3373 label and seal visible' }
+    ];
+    const steps = list.map(s => {
+      const done = !!d[s.id];
+      return {
+        ...s, done,
+        mark: done ? '✓' : '',
+        boxStyle: 'flex:none;width:24px;height:24px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;' + (done ? 'background:#1E7B34;border:2px solid #1E7B34;color:#FFFFFF' : 'background:#FFFFFF;border:2px solid #6B7889;color:transparent'),
+        toggle: () => this.setState({ done: { ...d, [s.id]: !d[s.id] }, finished: false })
+      };
+    });
+    const doneCount = steps.filter(s => s.done).length;
+    const ready = doneCount === 4;
+    const finished = this.state.finished;
+    return {
+      steps, doneCount,
+      complete: () => { if (ready) this.setState({ finished: true }); },
+      completeLabel: finished ? 'Picked Up 13:16 ✓' : (ready ? 'Complete Pickup' : 'Complete Pickup (' + doneCount + '/4)'),
+      completeStyle: 'flex:1;min-height:48px;border-radius:2px;font:700 15px \'Source Sans 3\',Arial,sans-serif;cursor:pointer;' + (finished ? 'background:#1E7B34;border:1px solid #165C27;color:#FFFFFF' : (ready ? 'background:#1A5A96;border:1px solid #14406A;color:#FFFFFF' : 'background:#D5DDE5;border:1px solid #AEBBC8;color:#3A4654'))
+    };
+  }
+}
+</script>
+<script src="dc-lite.js"></script>
+</body>
+</html>

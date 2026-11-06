@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedRoute — Compliance</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E8ECF0}
+a{color:#1A5A96}a:hover{color:#0E3F6E}
+</style>
+</helmet>
+<div style="font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1B2430; background: #E8ECF0; min-height: 100vh">
+
+<div style="background: #1A4E80; color: #FFFFFF; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="22" height="22" rx="2" fill="#FFFFFF"></rect><path d="M9 4h4v5h5v4h-5v5H9v-5H4V9h5z" fill="#1A4E80"></path></svg>
+<span style="font-weight: 700; font-size: 16px">MedRoute</span>
+<span style="font-size: 13px; color: #CFE0F0">Courier Logistics · Richmond Metro Hub</span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #CFE0F0">
+<span>Fri 06-Nov-2026 13:18</span>
+<span>Dispatcher: A. Reyes</span>
+<button type="button" style="min-height: 32px; padding: 0 10px; border: 1px solid #7FA6CB; background: transparent; color: #FFFFFF; border-radius: 2px; font: 600 13px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Log out</button>
+</div>
+</div>
+
+<nav aria-label="Modules" style="background: #F7F9FB; border-bottom: 1px solid #AEBBC8; display: flex; flex-wrap: wrap; padding: 0 12px">
+<a href="Main.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Dispatch Board</a>
+<a href="Compliance.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; font-weight: 700; color: #1A4E80; text-decoration: none; background: #FFFFFF; border-left: 1px solid #AEBBC8; border-right: 1px solid #AEBBC8; border-top: 3px solid #1A4E80; margin-bottom: -1px">Compliance</a>
+<a href="DriverApp.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Driver Handheld</a>
+<a href="Portal.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Client Portal</a>
+<a href="#reports" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Reports</a>
+</nav>
+
+<div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px">
+<span><span style="color: #4A5664">Jurisdiction:</span> <strong>Virginia</strong></span>
+<span><span style="color: #4A5664">Rule sets:</span> <strong>49 CFR 171–180 · 9VAC20-121 · OSHA 1910.1030</strong></span>
+<span><span style="color: #4A5664">Last audit export:</span> <strong>01-Oct-2026</strong></span>
+<span><span style="color: #4A5664">Mode:</span> <strong style="color: #8A4B00">SIMULATION — not real compliance</strong></span>
+</div>
+
+<main style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px; max-width: 1600px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px">
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Compliance</h1>
+<button type="button" onClick="{{ makeReport }}" style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #14406A; background: #1A5A96; color: #FFFFFF; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">{{ reportLabel }}</button>
+</div>
+
+<section aria-label="Summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: #FFFFFF; border: 1px solid #AEBBC8">
+<sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+<div style="padding: 10px 14px; border-right: 1px solid #D5DDE5">
+<div style="font-size: 12px; color: #4A5664; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em">{{ s.label }}</div>
+<div style="margin-top: 2px; font-size: 24px; font-weight: 700">{{ s.value }}</div>
+<div style="font-size: 12px; color: #4A5664">{{ s.sub }}</div>
+</div>
+</sc-for>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+
+<section aria-label="Driver credentials" style="flex: 999 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Driver Credentials</h2>
+<span style="font-size: 12px; color: #4A5664">Assignments restricted to cleared load classes</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Driver</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">DOT Hazmat (3 yr)</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">BBP (annual)</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">HIPAA</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Cleared For</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ drivers }}" as="d" hint-placeholder-count="8">
+<tr style="{{ d.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600">{{ d.name }}</td>
+<td style="padding: 6px 8px"><span style="{{ d.dotStyle }}">{{ d.dot }}</span></td>
+<td style="padding: 6px 8px">{{ d.bbp }}</td>
+<td style="padding: 6px 8px">{{ d.hipaa }}</td>
+<td style="padding: 6px 12px 6px 8px">{{ d.cleared }}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-label="RMW 24-hour clock" style="flex: 1 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #A4161A">
+<div style="background: #A4161A; color: #FFFFFF; padding: 6px 12px; display: flex; justify-content: space-between">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">RMW 24-Hour Clock</h2>
+<span style="font-size: 12px">9VAC20-121-150 I</span>
+</div>
+<div style="padding: 10px 12px">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<tbody>
+<tr><td style="padding: 3px 0; color: #4A5664; width: 120px">Unit</td><td style="padding: 3px 0; font-weight: 600">Truck 7 · Nguyen, T.</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">First pickup</td><td style="padding: 3px 0">05-Nov 17:38</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Elapsed</td><td style="padding: 3px 0; font-weight: 700; color: #A4161A">19 h 40 m</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Must unload by</td><td style="padding: 3px 0; font-weight: 700">06-Nov 17:38</td></tr>
+</tbody>
+</table>
+<div style="margin-top: 8px; height: 8px; background: #E1E6EB" role="img" aria-label="82 percent of 24 hours used"><div style="width: 82%; height: 100%; background: #A4161A"></div></div>
+<p style="margin: 8px 0 0; font-size: 13px; line-height: 1.45; color: #3A4654">Recommended: skip 2 remaining pickups; arrive at treatment facility 15:10.</p>
+<button type="button" style="margin-top: 8px; width: 100%; min-height: 36px; border-radius: 2px; border: 1px solid #7A1013; background: #A4161A; color: #FFFFFF; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Re-route to Facility</button>
+</div>
+</section>
+</div>
+
+<section aria-label="Vehicle pre-trip checks" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Vehicle Pre-Trip Checks · 06-Nov</h2>
+<span style="font-size: 12px; color: #4A5664">Submitted from driver handheld</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Unit</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Load Class</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Spill Kit</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">UN3373 Coolers</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Temp Logger</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Markings</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Checked</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Status</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="6">
+<tr style="{{ v.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600">{{ v.name }}</td>
+<td style="padding: 6px 8px">{{ v.use }}</td>
+<td style="padding: 6px 8px">{{ v.kit }}</td>
+<td style="padding: 6px 8px">{{ v.cooler }}</td>
+<td style="padding: 6px 8px">{{ v.logger }}</td>
+<td style="padding: 6px 8px">{{ v.marks }}</td>
+<td style="padding: 6px 8px">{{ v.time }}</td>
+<td style="padding: 6px 12px 6px 8px"><span style="{{ v.statusStyle }}">{{ v.status }}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-label="Chain of custody" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Chain of Custody · Bag VA-2611-0487</h2>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 13px">Bag ID
+<input type="text" value="VA-2611-0487" style="min-height: 30px; padding: 0 8px; border-radius: 2px; border: 1px solid #8C9AA8; font: 13px 'Source Sans 3', Arial, sans-serif; width: 140px">
+</label>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Time</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Event</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Custodian / Location</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Verification</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ custody }}" as="c" hint-placeholder-count="5">
+<tr style="{{ c.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600">{{ c.time }}</td>
+<td style="padding: 6px 8px">{{ c.event }}</td>
+<td style="padding: 6px 8px">{{ c.who }}</td>
+<td style="padding: 6px 12px 6px 8px">{{ c.proof }}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { report: false };
+  }
+  renderVals() {
+    const chip = (bg, fg, bd) => 'display:inline-block;padding:1px 6px;border:1px solid ' + bd + ';background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;border-radius:2px;white-space:nowrap';
+    const ok = chip('#EAF5EC', '#1E5B2C', '#7FB48D'), warn = chip('#FFF4DC', '#7A4300', '#E0B45C'), bad = chip('#FCEBEB', '#A4161A', '#E29A9C');
+    const zebra = i => 'border-bottom:1px solid #E1E6EB;background:' + (i % 2 ? '#F7F9FB' : '#FFFFFF');
+    const drivers = [
+      ['Alvarez, M.', 'Current · exp 08/2028', ok, '03/2027', '01/2027', 'Specimen, RMW'],
+      ['Brooks, K.', 'Current · exp 05/2028', ok, '12/2026', '01/2027', 'RMW'],
+      ['Harris, J.', 'Current · exp 10/2027', ok, '02/2027', '01/2027', 'Specimen'],
+      ['Kim, S.', 'Not on file', bad, '—', '01/2027', 'General only'],
+      ['Nguyen, T.', 'Current · exp 02/2029', ok, '09/2027', '01/2027', 'Specimen, RMW'],
+      ['Okafor, D.', 'Due 18-Nov-2026', warn, '06/2027', '01/2027', 'Specimen, RMW'],
+      ['Patel, R.', 'Current · exp 11/2027', ok, '04/2027', '01/2027', 'Specimen'],
+      ['Wallace, L.', 'Not on file', bad, '—', '01/2027', 'General only']
+    ].map((r, i) => ({ name: r[0], dot: r[1], dotStyle: r[2], bbp: r[3], hipaa: r[4], cleared: r[5], rowStyle: zebra(i) }));
+    const vehicles = [
+      ['Van 1', 'Specimen', 'Present', '2/2', 'Online', 'UN3373', '06:41', 'Ready', ok],
+      ['Van 3', 'Specimen', 'Present', '2/2', 'Online · 4.8 °C', 'UN3373', '06:52', 'Ready', ok],
+      ['Van 4', 'Specimen', 'Present', '1/2', 'Online · 8.6 °C', 'UN3373', '06:58', 'Review', warn],
+      ['Van 5', 'RMW', 'Not logged', '—', '—', 'Biohazard', '—', 'Blocked', bad],
+      ['Van 6', 'Specimen', 'Present', '2/2', 'Online · 4.2 °C', 'UN3373', '06:47', 'Ready', ok],
+      ['Truck 7', 'RMW', 'Present', '—', '—', 'Biohazard', '06:35', 'Ready', ok]
+    ].map((r, i) => ({ name: r[0], use: r[1], kit: r[2], cooler: r[3], logger: r[4], marks: r[5], time: r[6], status: r[7], statusStyle: r[8], rowStyle: zebra(i) }));
+    const custody = [
+      ['11:42', 'Picked up', 'Alvarez, M. · Westpark Family Medicine', 'Barcode · staff signature · GPS 37.60, -77.56'],
+      ['11:43', 'Packed — Cooler A', 'Van 3', 'Temp 4.6 °C (2–8 °C)'],
+      ['12:10', 'In-transit check', 'System', 'Temp 4.9 °C · on planned route'],
+      ['12:31', 'Delivered', 'James River Reference Lab · Ruiz, J. (Accessioning)', 'Barcode · signature · photo · 3/3 bags'],
+      ['12:31', 'Record closed', 'System', 'Locked for audit']
+    ].map((r, i) => ({ time: r[0], event: r[1], who: r[2], proof: r[3], rowStyle: zebra(i) }));
+    const summary = [
+      { label: 'Drivers Fully Certified', value: '6 / 8', sub: '1 renewal due · 2 general only' },
+      { label: 'Vehicles Ready', value: '4 / 6', sub: '1 blocked · 1 review' },
+      { label: 'Custody Records Today', value: '412', sub: '0 gaps · 0 missing signatures' },
+      { label: 'Temp Excursions', value: '1', sub: 'Rte 04 · open' }
+    ];
+    return {
+      drivers, vehicles, custody, summary,
+      makeReport: () => this.setState({ report: true }),
+      reportLabel: this.state.report ? 'Nov Audit Report Ready (PDF)' : 'Export Audit Report'
+    };
+  }
+}
+</script>
+</body>
+</html>

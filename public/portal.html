@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedRoute Client Portal — Westpark Family Medicine</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E8ECF0}
+a{color:#1A5A96}a:hover{color:#0E3F6E}
+</style>
+
+
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+
+<div style="font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1B2430; background: #E8ECF0; min-height: 100vh">
+
+<div style="background: #1A4E80; color: #FFFFFF; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="22" height="22" rx="2" fill="#FFFFFF"></rect><path d="M9 4h4v5h5v4h-5v5H9v-5H4V9h5z" fill="#1A4E80"></path></svg>
+<span style="font-weight: 700; font-size: 16px">MedRoute</span>
+<span style="font-size: 13px; color: #CFE0F0">Client Portal</span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #CFE0F0">
+<span>Signed in: L. Moreno, Practice Manager</span>
+<button type="button" style="min-height: 32px; padding: 0 10px; border: 1px solid #7FA6CB; background: transparent; color: #FFFFFF; border-radius: 2px; font: 600 13px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Log out</button>
+</div>
+</div>
+
+<nav aria-label="Portal" style="background: #F7F9FB; border-bottom: 1px solid #AEBBC8; display: flex; flex-wrap: wrap; padding: 0 12px">
+<a href="portal.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; font-weight: 700; color: #1A4E80; text-decoration: none; background: #FFFFFF; border-left: 1px solid #AEBBC8; border-right: 1px solid #AEBBC8; border-top: 3px solid #1A4E80; margin-bottom: -1px">Pickups &amp; Tracking</a>
+<a href="#documents" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Documents</a>
+<a href="#schedule" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Standing Schedule</a>
+<a href="#billing" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Billing</a>
+<a href="index.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #4A5664; text-decoration: none; margin-left: auto">Staff view ›</a>
+</nav>
+
+<div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px">
+<span><span style="color: #4A5664">Account:</span> <strong>Westpark Family Medicine · WPFM-0142</strong></span>
+<span><span style="color: #4A5664">Address:</span> <strong>[CLIENT ADDRESS], Henrico, VA</strong></span>
+<span><span style="color: #4A5664">Service level:</span> <strong>Specimen + RMW · STAT enabled</strong></span>
+<span><span style="color: #4A5664">Mode:</span> <strong style="color: #8A4B00">SIMULATION — sample data</strong></span>
+</div>
+
+<main style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px; max-width: 1600px">
+
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Pickups &amp; Tracking</h1>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+
+<section aria-label="Request a pickup" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Request a Pickup</h2>
+</div>
+<div data-if="formOpen" style="padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Pickup type
+<select onChange="{{ setType }}" style="min-height: 36px; padding: 0 8px; border: 1px solid #8C9AA8; border-radius: 2px; font: 14px 'Source Sans 3', Arial, sans-serif; background: #FFFFFF">
+<option value="routine">Routine specimens (next scheduled run)</option>
+<option value="stat">STAT specimens (within 30 min)</option>
+<option value="rmw">Regulated medical waste</option>
+</select>
+</label>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">{{ countLabel }}
+<input type="number" value="3" min="1" style="min-height: 36px; padding: 0 8px; border: 1px solid #8C9AA8; border-radius: 2px; font: 14px 'Source Sans 3', Arial, sans-serif">
+</label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Ready at
+<input type="time" value="13:30" style="min-height: 36px; padding: 0 8px; border: 1px solid #8C9AA8; border-radius: 2px; font: 14px 'Source Sans 3', Arial, sans-serif">
+</label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">{{ handlingLabel }}
+<select style="min-height: 36px; padding: 0 8px; border: 1px solid #8C9AA8; border-radius: 2px; font: 14px 'Source Sans 3', Arial, sans-serif; background: #FFFFFF">
+<option data-for="handlingOptions" data-as="o">{{ o }}</option>
+</select>
+</label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Deliver to
+<select style="min-height: 36px; padding: 0 8px; border: 1px solid #8C9AA8; border-radius: 2px; font: 14px 'Source Sans 3', Arial, sans-serif; background: #FFFFFF">
+<option data-for="destinations" data-as="o">{{ o }}</option>
+</select>
+</label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600">Notes for driver
+<textarea rows="2" style="padding: 6px 8px; border: 1px solid #8C9AA8; border-radius: 2px; font: 14px 'Source Sans 3', Arial, sans-serif; resize: vertical">Lab window, side entrance</textarea>
+</label>
+<div style="border: 1px solid #9DBAD6; background: #EEF4FA; padding: 8px 10px; font-size: 13px; line-height: 1.45"><strong style="color: #14406A">Estimated pickup:</strong> {{ estimate }}</div>
+<button type="button" onClick="{{ submit }}" style="min-height: 40px; border-radius: 2px; border: 1px solid #14406A; background: #1A5A96; color: #FFFFFF; font: 700 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Submit Request</button>
+</div>
+<div data-if="submitted" role="status" style="padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="border: 1px solid #7FB48D; background: #EAF5EC; color: #1E5B2C; padding: 10px; font-size: 14px; line-height: 1.45"><strong>Request {{ reqId }} confirmed.</strong><br>{{ confirmText }}</div>
+<button type="button" onClick="{{ reset }}" style="min-height: 40px; border-radius: 2px; border: 1px solid #8C9AA8; background: #FFFFFF; color: #1B2430; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">New Request</button>
+</div>
+</section>
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+
+<section aria-label="Active shipments" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Today's Shipments</h2>
+<span style="font-size: 12px; color: #4A5664">Updated 13:18</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Request</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Type</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Items</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Destination</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Status</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr data-for="shipments" data-as="s" style="{{ s.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600"><a href="#track">{{ s.id }}</a></td>
+<td style="padding: 6px 8px">{{ s.type }}</td>
+<td style="padding: 6px 8px">{{ s.items }}</td>
+<td style="padding: 6px 8px">{{ s.dest }}</td>
+<td style="padding: 6px 8px"><span style="{{ s.statusStyle }}">{{ s.status }}</span></td>
+<td style="padding: 6px 12px 6px 8px">{{ s.time }}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="track" aria-label="Live tracking" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Tracking · ST-1104 (STAT)</h2>
+<span style="font-size: 12px; color: #4A5664">Driver: Alvarez, M. · Van 3</span>
+</div>
+<ol style="list-style: none; margin: 0; padding: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+<li data-for="track" data-as="t" style="display: flex; flex-direction: column; gap: 4px; font-size: 13px">
+<span style="{{ t.barStyle }}"></span>
+<strong>{{ t.label }}</strong>
+<span style="color: #4A5664">{{ t.time }}</span>
+</li>
+</ol>
+<div style="padding: 0 12px 12px; font-size: 13px; color: #3A4654">Cooler temperature 4.8 °C (2–8 °C) · Estimated lab arrival 13:31</div>
+</section>
+
+<section id="documents" aria-label="Documents" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Recent Documents</h2>
+</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<tbody>
+<tr data-for="docs" data-as="d" style="{{ d.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600">{{ d.name }}</td>
+<td style="padding: 6px 8px; color: #4A5664">{{ d.date }}</td>
+<td style="padding: 6px 12px 6px 8px; text-align: right"><a href="#documents">Download PDF</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+</div>
+</div>
+</main>
+</div>
+</template>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { type: 'routine', submitted: false };
+  }
+  renderVals() {
+    const chip = (bg, fg, bd) => 'display:inline-block;padding:1px 6px;border:1px solid ' + bd + ';background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;border-radius:2px;white-space:nowrap';
+    const blue = chip('#EEF4FA', '#14406A', '#9DBAD6'), green = chip('#EAF5EC', '#1E5B2C', '#7FB48D'), grey = chip('#F2F4F6', '#3A4654', '#C9D3DD');
+    const zebra = i => 'border-bottom:1px solid #E1E6EB;background:' + (i % 2 ? '#F7F9FB' : '#FFFFFF');
+    const t = this.state.type;
+    const cfg = {
+      routine: { count: 'Specimen bags', handling: 'Temperature', opts: ['Refrigerated 2–8 °C', 'Ambient', 'Frozen (dry ice)'], dest: ['James River Reference Lab', 'Capitol Diagnostics'], est: 'next scheduled run, 16:00–16:20', confirm: 'Added to the 16:00 run. You will get a text when the driver is 10 minutes away.' },
+      stat: { count: 'Specimen bags', handling: 'Temperature', opts: ['Refrigerated 2–8 °C', 'Ambient', 'Frozen (dry ice)'], dest: ['James River Reference Lab', 'Capitol Diagnostics'], est: '13:42–13:48 (nearest certified driver 9 min away)', confirm: 'A certified driver is assigned. Pickup about 13:45. Live tracking appears in Today’s Shipments.' },
+      rmw: { count: 'Containers (≤35 lb each)', handling: 'Waste type', opts: ['Red bag (biohazard)', 'Sharps containers', 'Pathological'], dest: ['Contracted treatment facility'], est: 'tomorrow 09:00–11:00 (RMW route)', confirm: 'Scheduled on tomorrow’s RMW route. Shipping papers and the treatment confirmation will appear in Documents.' }
+    }[t];
+    const shipments = [
+      ['ST-1104', 'STAT specimen', '3 bags', 'James River Ref. Lab', 'En route to pickup', blue, 'ETA 13:15'],
+      ['RT-2290', 'Routine specimen', '5 bags', 'James River Ref. Lab', 'Delivered', green, '12:31'],
+      ['RT-2291', 'Routine specimen', '—', 'James River Ref. Lab', 'Scheduled', grey, '16:00'],
+      ['RW-0388', 'Medical waste', '4 cont.', 'Treatment facility', 'Treated', green, '05-Nov']
+    ].map((r, i) => ({ id: r[0], type: r[1], items: r[2], dest: r[3], status: r[4], statusStyle: r[5], time: r[6], rowStyle: zebra(i) }));
+    const steps = [['Requested', '13:04', 1], ['Driver assigned', '13:05', 1], ['Picked up', 'est. 13:15', 0], ['In transit', '—', 0], ['Delivered to lab', 'est. 13:31', 0]];
+    const track = steps.map(s => ({ label: s[0], time: s[1], barStyle: 'display:block;height:6px;background:' + (s[2] ? '#1A5A96' : '#D5DDE5') }));
+    const docs = [
+      ['Chain-of-custody record · RT-2290', '06-Nov-2026'],
+      ['RMW shipping papers · RW-0388', '05-Nov-2026'],
+      ['Treatment confirmation · RW-0388', '05-Nov-2026'],
+      ['Monthly service statement · October', '01-Nov-2026']
+    ].map((r, i) => ({ name: r[0], date: r[1], rowStyle: zebra(i) }));
+    return {
+      shipments, track, docs,
+      formOpen: !this.state.submitted,
+      submitted: this.state.submitted,
+      countLabel: cfg.count, handlingLabel: cfg.handling, handlingOptions: cfg.opts, destinations: cfg.dest,
+      estimate: cfg.est, confirmText: cfg.confirm,
+      reqId: t === 'stat' ? 'ST-1105' : (t === 'rmw' ? 'RW-0391' : 'RT-2292'),
+      setType: (e) => this.setState({ type: e.target.value }),
+      submit: () => this.setState({ submitted: true }),
+      reset: () => this.setState({ submitted: false, type: 'routine' })
+    };
+  }
+}
+</script>
+<script src="dc-lite.js"></script>
+</body>
+</html>
