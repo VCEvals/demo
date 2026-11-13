@@ -66,6 +66,12 @@ for src_name, out_name in PAGES.items():
         body = body.replace('position: relative; height: 220px; background: #F2F4F6', 'position: relative; height: 380px; background: #F2F4F6', 1)
         body = body.replace('position: absolute; right: 8px; bottom: 8px;', 'position: absolute; z-index: 2; right: 8px; bottom: 24px;', 1)
         scripts = '<script src="config.js"></script>\n<script src="maps.js"></script>\n' + scripts
+    if out_name == "driver.html":
+        # Live Google map of the driver's route replaces the drawn illustration.
+        body, n = re.subn(r'<svg width="390" height="300".*?</svg>', '<div id="gmap-driver-slot" style="position: absolute; inset: 0"></div>', body, flags=re.S)
+        assert n == 1, "driver map svg not found"
+        body = body.replace('<div style="position: absolute; left: 8px; bottom: 8px; background: #FFFFFF;', '<div style="position: absolute; z-index: 2; left: 8px; bottom: 24px; background: #FFFFFF;', 1)
+        scripts = '<script>window.MEDROUTE_MAP_VIEW = "driver";</script>\n<script src="config.js"></script>\n<script src="maps.js"></script>\n' + scripts
     logic = re.search(r"<script type=\"text/x-dc\"[^>]*>(.*?)</script>", s, re.S).group(1)
     css = EXTRA_CSS.get(out_name, "")
     page = f"""<!doctype html>

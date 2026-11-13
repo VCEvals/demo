@@ -26,6 +26,11 @@ a{color:#1A5A96}a:hover{color:#0E3F6E}
 <span style="font-size: 13px; color: #CFE0F0">13:15</span>
 </div>
 
+<div role="tablist" aria-label="Driver views" style="display: flex; background: #F7F9FB; border-bottom: 1px solid #AEBBC8">
+<button type="button" role="tab" aria-selected="{{ isPickup }}" onClick="{{ showPickup }}" style="{{ pickupTabStyle }}">Pickup</button>
+<button type="button" role="tab" aria-selected="{{ isMap }}" onClick="{{ showMap }}" style="{{ mapTabStyle }}">Route Map</button>
+</div>
+
 <div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 12px; font-size: 13px; line-height: 1.45">
 <div style="display: flex; justify-content: space-between; align-items: center">
 <strong style="font-size: 16px">Westpark Family Medicine</strong>
@@ -35,7 +40,7 @@ a{color:#1A5A96}a:hover{color:#0E3F6E}
 <div>Deliver: James River Reference Lab by <strong>13:34</strong></div>
 </div>
 
-<div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column">
+<div data-if="isPickup" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column">
 
 <table style="width: 100%; border-collapse: collapse; font-size: 14px; background: #FFFFFF; border-bottom: 1px solid #AEBBC8">
 <tbody>
@@ -59,6 +64,35 @@ a{color:#1A5A96}a:hover{color:#0E3F6E}
 <div style="margin: 10px 12px; padding: 8px 10px; border: 1px solid #E0B45C; background: #FFF4DC; color: #5C3300; font-size: 13px; line-height: 1.4">Spill or damaged bag: stop, put on gloves, use the spill kit, then tap Report Incident.</div>
 </div>
 
+<div data-if="isMap" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column">
+<div style="position: relative; height: 300px; background: #F2F4F6; border-bottom: 1px solid #AEBBC8">
+<div id="gmap-driver-slot" style="position: absolute; inset: 0"></div>
+<div style="position: absolute; z-index: 2; left: 8px; bottom: 24px; background: #FFFFFF; border: 1px solid #C9D3DD; padding: 3px 8px; font-size: 12px">■ You · Van 3</div>
+</div>
+
+<div style="background: #FFFFFF; border-bottom: 1px solid #AEBBC8; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 12px; font-weight: 700; color: #4A5664; text-transform: uppercase; letter-spacing: 0.04em">Next stop · 7</span>
+<strong style="font-size: 16px">Westpark Family Medicine</strong>
+<span style="font-size: 13px; color: #3A4654">2.4 mi · arrive 13:15 · side entrance</span>
+</div>
+<a href="https://www.google.com/maps/dir/?api=1&amp;destination=37.6006,-77.5600&amp;travelmode=driving" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; background: #1A5A96; color: #FFFFFF; font-weight: 700; text-decoration: none; border-radius: 2px">Navigate</a>
+</div>
+
+<div style="padding: 10px 12px 4px; font-size: 12px; font-weight: 700; color: #4A5664; text-transform: uppercase; letter-spacing: 0.04em">Remaining Stops</div>
+<ol style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border-top: 1px solid #AEBBC8; border-bottom: 1px solid #AEBBC8">
+<li data-for="stops" data-as="st" style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-bottom: 1px solid #E1E6EB">
+<span style="{{ st.numStyle }}">{{ st.n }}</span>
+<span style="flex: 1; display: flex; flex-direction: column">
+<span style="font-size: 15px; font-weight: 600">{{ st.name }}</span>
+<span style="font-size: 13px; color: #4A5664">{{ st.task }}</span>
+</span>
+<span style="font-size: 14px; font-weight: 700">{{ st.eta }}</span>
+</li>
+</ol>
+<div style="padding: 8px 12px; font-size: 12px; color: #4A5664">+ 6 more stops · route re-optimized 13:15</div>
+</div>
+
 <div style="padding: 10px 12px 22px; background: #F7F9FB; border-top: 1px solid #AEBBC8; display: flex; gap: 8px">
 <button type="button" style="min-height: 48px; padding: 0 14px; border-radius: 2px; border: 1px solid #A4161A; background: #FFFFFF; color: #A4161A; font: 700 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Report Incident</button>
 <button type="button" onClick="{{ complete }}" style="{{ completeStyle }}">{{ completeLabel }}</button>
@@ -69,7 +103,7 @@ a{color:#1A5A96}a:hover{color:#0E3F6E}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { done: { scan: true, temp: true, sign: false, photo: false }, finished: false };
+    this.state = { done: { scan: true, temp: true, sign: false, photo: false }, finished: false, tab: 'pickup' };
   }
   renderVals() {
     const d = this.state.done;
@@ -91,8 +125,21 @@ class Component extends DCLogic {
     const doneCount = steps.filter(s => s.done).length;
     const ready = doneCount === 4;
     const finished = this.state.finished;
+    const isMap = this.state.tab === 'map';
+    const tab = on => 'flex:1;min-height:44px;border:0;border-bottom:3px solid ' + (on ? '#1A4E80' : 'transparent') + ';background:' + (on ? '#FFFFFF' : 'transparent') + ';color:' + (on ? '#1A4E80' : '#2E3A48') + ';font:' + (on ? '700' : '600') + ' 15px \'Source Sans 3\',Arial,sans-serif;cursor:pointer';
+    const num = c => 'flex:none;width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#FFFFFF;background:' + c;
+    const stops = [
+      { n: '7', name: 'Westpark Family Medicine', task: 'STAT pickup · 3 bags', eta: '13:15', numStyle: num('#A4161A') },
+      { n: '8', name: 'James River Reference Lab', task: 'Drop off · 3 STAT + 9 routine bags', eta: '13:31', numStyle: num('#1A5A96') },
+      { n: '9', name: 'Henrico Urgent Care', task: 'Routine pickup', eta: '13:48', numStyle: num('#1A5A96') },
+      { n: '10', name: 'Bon Air Dialysis Center', task: 'Routine pickup · supplies', eta: '14:10', numStyle: num('#1A5A96') }
+    ];
     return {
-      steps, doneCount,
+      steps, doneCount, stops,
+      isMap, isPickup: !isMap,
+      showMap: () => this.setState({ tab: 'map' }),
+      showPickup: () => this.setState({ tab: 'pickup' }),
+      pickupTabStyle: tab(!isMap), mapTabStyle: tab(isMap),
       complete: () => { if (ready) this.setState({ finished: true }); },
       completeLabel: finished ? 'Picked Up 13:16 ✓' : (ready ? 'Complete Pickup' : 'Complete Pickup (' + doneCount + '/4)'),
       completeStyle: 'flex:1;min-height:48px;border-radius:2px;font:700 15px \'Source Sans 3\',Arial,sans-serif;cursor:pointer;' + (finished ? 'background:#1E7B34;border:1px solid #165C27;color:#FFFFFF' : (ready ? 'background:#1A5A96;border:1px solid #14406A;color:#FFFFFF' : 'background:#D5DDE5;border:1px solid #AEBBC8;color:#3A4654'))
@@ -100,6 +147,9 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>window.MEDROUTE_MAP_VIEW = "driver";</script>
+<script src="config.js"></script>
+<script src="maps.js"></script>
 <script src="dc-lite.js"></script>
 </body>
 </html>
