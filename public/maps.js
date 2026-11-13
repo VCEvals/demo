@@ -61,18 +61,35 @@
     const lineOpts = r => r.dashed
       ? { strokeOpacity: 0, icons: [{ icon: { path: 'M 0,-1 0,1', strokeOpacity: 1, strokeColor: r.color, scale: 3 }, offset: '0', repeat: '14px' }] }
       : { strokeColor: r.color, strokeOpacity: 0.9, strokeWeight: 4 };
-    const ds = new g.DirectionsService();
+    const num = v => (typeof v === 'function' ? v() : v);
+    const toLL = p => ({ lat: num(p.lat), lng: num(p.lng) });
+
+    // Road-following path: Routes API first (new projects), then the legacy
+    // Directions service (older projects), else straight lines between stops.
+    async function roadPath(pts) {
+      try {
+        const { Route } = await g.importLibrary('routes');
+        const base = { origin: pts[0], destination: pts[pts.length - 1], travelMode: 'DRIVING', fields: ['path'] };
+        const mids = pts.slice(1, -1);
+        let res;
+        try { res = await Route.computeRoutes(Object.assign({ intermediates: mids }, base)); }
+        catch (e) { res = await Route.computeRoutes(Object.assign({ intermediates: mids.map(p => ({ location: p })) }, base)); }
+        const path = res && res.routes && res.routes[0] && res.routes[0].path;
+        if (path && path.length) return path.map(toLL);
+      } catch (e) { console.info('MedRoute map: Routes API unavailable', e && e.message); }
+      try {
+        const res = await new g.DirectionsService().route({
+          origin: pts[0], destination: pts[pts.length - 1],
+          waypoints: pts.slice(1, -1).map(p => ({ location: p, stopover: true })),
+          travelMode: g.TravelMode.DRIVING
+        });
+        return res.routes[0].overview_path.map(toLL);
+      } catch (e) { console.info('MedRoute map: Directions API unavailable, drawing straight lines'); }
+      return pts;
+    }
 
     ROUTES.forEach(r => {
-      const pts = r.path.map(ll);
-      const fallback = () => new g.Polyline(Object.assign({ map, path: pts }, lineOpts(r)));
-      ds.route({
-        origin: pts[0], destination: pts[pts.length - 1],
-        waypoints: pts.slice(1, -1).map(p => ({ location: p, stopover: true })),
-        travelMode: g.TravelMode.DRIVING
-      }).then(res => {
-        new g.DirectionsRenderer({ map, directions: res, suppressMarkers: true, preserveViewport: true, polylineOptions: lineOpts(r) });
-      }).catch(fallback); // Directions API not enabled on the key: draw straight lines instead
+      roadPath(r.path.map(ll)).then(path => new g.Polyline(Object.assign({ map, path }, lineOpts(r))));
       marker(r.path[r.vehicleAt], r.unit + ' · ' + r.name, r.color, SQUARE);
     });
     marker(LAB.pos, LAB.label, '#1B2430', SQUARE);

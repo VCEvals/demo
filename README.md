@@ -28,7 +28,7 @@ Without a key, the dispatch board shows a plain Google map of the Richmond area.
 To show sample routes, vehicles, the lab and the STAT pickup on the map:
 
 1. In Google Cloud Console, create a project and attach a billing account (Google requires one; light usage typically stays in the free tier).
-2. Enable **Maps JavaScript API**. Optionally enable **Directions API** so routes follow real roads (otherwise they're drawn as straight lines).
+2. Enable **Maps JavaScript API**. Optionally enable **Routes API** so routes follow real roads (otherwise they are drawn as straight lines). Older projects can use the legacy Directions API instead.
 3. Create an API key and restrict it: **Application restrictions → Websites**, add `https://<your-project>.pages.dev/*`; **API restrictions** → the APIs above.
 4. Paste the key into `public/config.js` and push. Cloudflare redeploys automatically.
 
