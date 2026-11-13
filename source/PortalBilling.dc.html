@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MedRoute Client Portal — Billing</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E8ECF0}
+a{color:#1A5A96}a:hover{color:#0E3F6E}
+</style>
+</helmet>
+<div style="font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1B2430; background: #E8ECF0; min-height: 100vh">
+
+<div style="background: #1A4E80; color: #FFFFFF; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="22" height="22" rx="2" fill="#FFFFFF"></rect><path d="M9 4h4v5h5v4h-5v5H9v-5H4V9h5z" fill="#1A4E80"></path></svg>
+<span style="font-weight: 700; font-size: 16px">MedRoute</span>
+<span style="font-size: 13px; color: #CFE0F0">Client Portal</span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #CFE0F0">
+<span>Signed in: Christopher Proto, Practice Manager</span>
+<button type="button" style="min-height: 32px; padding: 0 10px; border: 1px solid #7FA6CB; background: transparent; color: #FFFFFF; border-radius: 2px; font: 600 13px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Log out</button>
+</div>
+</div>
+
+<nav aria-label="Portal" style="background: #F7F9FB; border-bottom: 1px solid #AEBBC8; display: flex; flex-wrap: wrap; padding: 0 12px">
+<a href="Portal.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Pickups &amp; Tracking</a>
+<a href="PortalDocs.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Documents</a>
+<a href="PortalSchedule.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Standing Schedule</a>
+<a href="PortalBilling.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; font-weight: 700; color: #1A4E80; text-decoration: none; background: #FFFFFF; border-left: 1px solid #AEBBC8; border-right: 1px solid #AEBBC8; border-top: 3px solid #1A4E80; margin-bottom: -1px">Billing</a>
+<a href="Main.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #4A5664; text-decoration: none; margin-left: auto">Staff view ›</a>
+</nav>
+
+<div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px">
+<span><span style="color: #4A5664">Account:</span> <strong>Westpark Family Medicine · WPFM-0142</strong></span>
+<span><span style="color: #4A5664">Terms:</span> <strong>Net 30 · monthly invoice</strong></span>
+</div>
+
+<main style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px; max-width: 1600px">
+
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Billing</h1>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+
+<section aria-label="Balance" style="flex: 1 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Account Balance</h2>
+</div>
+<div style="padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 32px; font-weight: 700">{{ balance }}</div>
+<div style="font-size: 13px; color: #3A4654">{{ balanceNote }}</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<tbody>
+<tr><td style="padding: 3px 0; color: #4A5664">Payment method</td><td style="padding: 3px 0; text-align: right">ACH · account ending 0142</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Autopay</td><td style="padding: 3px 0; text-align: right">Off</td></tr>
+<tr><td style="padding: 3px 0; color: #4A5664">Billing contact</td><td style="padding: 3px 0; text-align: right">Christopher Proto</td></tr>
+</tbody>
+</table>
+<sc-if value="{{ canPay }}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{ pay }}" style="min-height: 40px; border-radius: 2px; border: 1px solid #14406A; background: #1A5A96; color: #FFFFFF; font: 700 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Pay INV-10482 ($1,284.50)</button>
+</sc-if>
+<sc-if value="{{ paid }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="border: 1px solid #7FB48D; background: #EAF5EC; color: #1E5B2C; padding: 8px 10px; font-size: 13px; font-weight: 600">Payment scheduled · confirmation PMT-55120 (simulated)</div>
+</sc-if>
+</div>
+</section>
+
+<section aria-label="This month's usage" style="flex: 999 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">November Usage (to date)</h2>
+<span style="font-size: 12px; color: #4A5664">Invoiced 01-Dec</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 560px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Service</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700; text-align: right">Qty</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700; text-align: right">Rate</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700; text-align: right">Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid #E1E6EB"><td style="padding: 6px 12px">Routine specimen pickups</td><td style="padding: 6px 8px; text-align: right">10</td><td style="padding: 6px 8px; text-align: right">$18.00</td><td style="padding: 6px 12px 6px 8px; text-align: right">$180.00</td></tr>
+<tr style="border-bottom: 1px solid #E1E6EB; background: #F7F9FB"><td style="padding: 6px 12px">STAT pickups</td><td style="padding: 6px 8px; text-align: right">2</td><td style="padding: 6px 8px; text-align: right">$65.00</td><td style="padding: 6px 12px 6px 8px; text-align: right">$130.00</td></tr>
+<tr style="border-bottom: 1px solid #E1E6EB"><td style="padding: 6px 12px">Medical waste containers</td><td style="padding: 6px 8px; text-align: right">4</td><td style="padding: 6px 8px; text-align: right">$32.00</td><td style="padding: 6px 12px 6px 8px; text-align: right">$128.00</td></tr>
+<tr style="border-bottom: 1px solid #E1E6EB; background: #F7F9FB"><td style="padding: 6px 12px">Supply deliveries</td><td style="padding: 6px 8px; text-align: right">1</td><td style="padding: 6px 8px; text-align: right">$12.00</td><td style="padding: 6px 12px 6px 8px; text-align: right">$12.00</td></tr>
+<tr><td style="padding: 8px 12px; font-weight: 700">Total so far</td><td></td><td></td><td style="padding: 8px 12px 8px 8px; text-align: right; font-weight: 700">$450.00</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+
+<section aria-label="Invoices" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Invoices</h2>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Invoice</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Period</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Issued</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Due</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700; text-align: right">Amount</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Status</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700; text-align: right">File</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ invoices }}" as="v" hint-placeholder-count="4">
+<tr style="{{ v.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600">{{ v.id }}</td>
+<td style="padding: 6px 8px">{{ v.period }}</td>
+<td style="padding: 6px 8px">{{ v.issued }}</td>
+<td style="padding: 6px 8px">{{ v.due }}</td>
+<td style="padding: 6px 8px; text-align: right">{{ v.amount }}</td>
+<td style="padding: 6px 8px"><span style="{{ v.statusStyle }}">{{ v.status }}</span></td>
+<td style="padding: 6px 12px 6px 8px; text-align: right"><a href="#invoice">PDF</a></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { paid: false };
+  }
+  renderVals() {
+    const paid = this.state.paid;
+    const chip = (bg, fg, bd) => 'display:inline-block;padding:1px 6px;border:1px solid ' + bd + ';background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;border-radius:2px';
+    const open = chip('#FFF4DC', '#7A4300', '#E0B45C'), done = chip('#EAF5EC', '#1E5B2C', '#7FB48D'), sched = chip('#EEF4FA', '#14406A', '#9DBAD6');
+    const invoices = [
+      ['INV-10482', 'October 2026', '01-Nov-2026', '01-Dec-2026', '$1,284.50', paid ? 'Payment scheduled' : 'Open', paid ? sched : open],
+      ['INV-10391', 'September 2026', '01-Oct-2026', '31-Oct-2026', '$1,196.00', 'Paid', done],
+      ['INV-10307', 'August 2026', '01-Sep-2026', '01-Oct-2026', '$1,240.25', 'Paid', done],
+      ['INV-10218', 'July 2026', '01-Aug-2026', '31-Aug-2026', '$1,152.75', 'Paid', done]
+    ].map((r, i) => ({ id: r[0], period: r[1], issued: r[2], due: r[3], amount: r[4], status: r[5], statusStyle: r[6], rowStyle: 'border-bottom:1px solid #E1E6EB;background:' + (i % 2 ? '#F7F9FB' : '#FFFFFF') }));
+    return {
+      invoices,
+      balance: paid ? '$0.00 due' : '$1,284.50',
+      balanceNote: paid ? 'Payment for INV-10482 is scheduled.' : 'INV-10482 · due 01-Dec-2026',
+      canPay: !paid, paid,
+      pay: () => this.setState({ paid: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

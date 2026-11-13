@@ -11,7 +11,11 @@ Interactive mockup of an AI-assisted dispatch and compliance system for a Virgin
 | Dispatch board | `public/index.html` |
 | Compliance center (Virginia) | `public/compliance.html` |
 | Driver handheld | `public/driver.html` |
-| Client portal | `public/portal.html` |
+| Client portal: pickups & tracking | `public/portal.html` |
+| Client portal: documents | `public/portal-documents.html` |
+| Client portal: standing schedule | `public/portal-schedule.html` |
+| Client portal: billing | `public/portal-billing.html` |
+| Reports (staff) | `public/reports.html` |
 
 ## Deploy on Cloudflare Pages
 1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.

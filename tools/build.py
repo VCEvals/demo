@@ -14,6 +14,10 @@ PAGES = {
     "Compliance.dc.html": "compliance.html",
     "DriverApp.dc.html": "driver.html",
     "Portal.dc.html": "portal.html",
+    "PortalDocs.dc.html": "portal-documents.html",
+    "PortalSchedule.dc.html": "portal-schedule.html",
+    "PortalBilling.dc.html": "portal-billing.html",
+    "Reports.dc.html": "reports.html",
 }
 
 EXTRA_CSS = {
@@ -25,9 +29,10 @@ def unwrap(tag, attr_map, html):
     """Turn <tag a="{{ x }}" ...>ONE_CHILD</tag> into ONE_CHILD with data-* attributes."""
     pat = re.compile(r"<%s\b([^>]*)>\s*(<([a-zA-Z0-9-]+)\b)" % tag)
     while True:
-        m = pat.search(html)
-        if not m:
+        ms = list(pat.finditer(html))
+        if not ms:
             return html
+        m = ms[-1]  # innermost-last first, so nested wrappers resolve correctly
         attrs = dict(re.findall(r'([\w-]+)="([^"]*)"', m.group(1)))
         extra = ""
         for k, dk in attr_map.items():

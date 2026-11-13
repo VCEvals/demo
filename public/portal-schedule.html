@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedRoute Client Portal — Standing Schedule</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E8ECF0}
+a{color:#1A5A96}a:hover{color:#0E3F6E}
+</style>
+
+
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+
+<div style="font-family: 'Source Sans 3', 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1B2430; background: #E8ECF0; min-height: 100vh">
+
+<div style="background: #1A4E80; color: #FFFFFF; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="0" y="0" width="22" height="22" rx="2" fill="#FFFFFF"></rect><path d="M9 4h4v5h5v4h-5v5H9v-5H4V9h5z" fill="#1A4E80"></path></svg>
+<span style="font-weight: 700; font-size: 16px">MedRoute</span>
+<span style="font-size: 13px; color: #CFE0F0">Client Portal</span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #CFE0F0">
+<span>Signed in: Christopher Proto, Practice Manager</span>
+<button type="button" style="min-height: 32px; padding: 0 10px; border: 1px solid #7FA6CB; background: transparent; color: #FFFFFF; border-radius: 2px; font: 600 13px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Log out</button>
+</div>
+</div>
+
+<nav aria-label="Portal" style="background: #F7F9FB; border-bottom: 1px solid #AEBBC8; display: flex; flex-wrap: wrap; padding: 0 12px">
+<a href="portal.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Pickups &amp; Tracking</a>
+<a href="portal-documents.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Documents</a>
+<a href="portal-schedule.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; font-weight: 700; color: #1A4E80; text-decoration: none; background: #FFFFFF; border-left: 1px solid #AEBBC8; border-right: 1px solid #AEBBC8; border-top: 3px solid #1A4E80; margin-bottom: -1px">Standing Schedule</a>
+<a href="portal-billing.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #2E3A48; text-decoration: none">Billing</a>
+<a href="index.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; color: #4A5664; text-decoration: none; margin-left: auto">Staff view ›</a>
+</nav>
+
+<div style="background: #DCE6EF; border-bottom: 1px solid #AEBBC8; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px">
+<span><span style="color: #4A5664">Account:</span> <strong>Westpark Family Medicine · WPFM-0142</strong></span>
+<span><span style="color: #4A5664">Active standing pickups:</span> <strong>{{ activeCount }}</strong></span>
+</div>
+
+<main style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px; max-width: 1600px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px">
+<h1 style="margin: 0; font-size: 20px; font-weight: 700">Standing Schedule</h1>
+<button type="button" style="min-height: 36px; padding: 0 14px; border-radius: 2px; border: 1px solid #14406A; background: #1A5A96; color: #FFFFFF; font: 600 14px 'Source Sans 3', Arial, sans-serif; cursor: pointer">Add Standing Pickup</button>
+</div>
+
+<section aria-label="Weekly view" style="background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Weekly View</h2>
+<span style="font-size: 12px; color: #4A5664">Paused pickups are hidden</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+<div data-for="week" data-as="d" style="border-right: 1px solid #E1E6EB; min-height: 160px; display: flex; flex-direction: column">
+<div style="padding: 6px 10px; background: #F7F9FB; border-bottom: 1px solid #E1E6EB; font-weight: 700; font-size: 13px">{{ d.day }}</div>
+<div style="padding: 8px; display: flex; flex-direction: column; gap: 6px">
+<div data-for="d.items" data-as="it" style="{{ it.style }}"><strong>{{ it.time }}</strong> · {{ it.label }}</div>
+</div>
+</div>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+
+<section aria-label="Standing pickups" style="flex: 999 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Standing Pickups</h2>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 680px">
+<thead>
+<tr style="text-align: left; background: #F7F9FB">
+<th style="padding: 6px 12px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Type</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Days</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Window</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Destination</th>
+<th style="padding: 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700">Status</th>
+<th style="padding: 6px 12px 6px 8px; border-bottom: 1px solid #C9D3DD; font-weight: 700; text-align: right">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr data-for="orders" data-as="o" style="{{ o.rowStyle }}">
+<td style="padding: 6px 12px; font-weight: 600">{{ o.type }}</td>
+<td style="padding: 6px 8px">{{ o.days }}</td>
+<td style="padding: 6px 8px">{{ o.window }}</td>
+<td style="padding: 6px 8px">{{ o.dest }}</td>
+<td style="padding: 6px 8px"><span style="{{ o.statusStyle }}">{{ o.status }}</span></td>
+<td style="padding: 6px 12px 6px 8px; text-align: right"><button type="button" onClick="{{ o.toggle }}" style="min-height: 30px; padding: 0 10px; border-radius: 2px; border: 1px solid #8C9AA8; background: #FFFFFF; color: #1B2430; font: 600 13px 'Source Sans 3', Arial, sans-serif; cursor: pointer">{{ o.action }}</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-label="Holiday changes" style="flex: 1 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #AEBBC8">
+<div style="background: #EEF2F6; border-bottom: 1px solid #AEBBC8; padding: 6px 12px">
+<h2 style="margin: 0; font-size: 14px; font-weight: 700">Upcoming Changes</h2>
+</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 13px">
+<tbody>
+<tr style="border-bottom: 1px solid #E1E6EB"><td style="padding: 8px 12px; font-weight: 600">Thu 26-Nov</td><td style="padding: 8px 12px">Thanksgiving · no routine pickups</td></tr>
+<tr style="border-bottom: 1px solid #E1E6EB"><td style="padding: 8px 12px; font-weight: 600">Fri 27-Nov</td><td style="padding: 8px 12px">Single run at 13:00</td></tr>
+<tr><td style="padding: 8px 12px; font-weight: 600">Fri 25-Dec</td><td style="padding: 8px 12px">Christmas · STAT only</td></tr>
+</tbody>
+</table>
+<p style="margin: 0; padding: 8px 12px 12px; font-size: 12px; color: #4A5664">STAT pickups stay available on holidays.</p>
+</section>
+</div>
+</main>
+</div>
+</template>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { paused: {} };
+  }
+  renderVals() {
+    const p = this.state.paused;
+    const chip = (bg, fg, bd) => 'display:inline-block;padding:1px 6px;border:1px solid ' + bd + ';background:' + bg + ';color:' + fg + ';font-size:12px;font-weight:700;border-radius:2px';
+    const defs = [
+      { id: 'am', type: 'Routine specimens', days: 'Mon–Fri', dayIdx: [0, 1, 2, 3, 4], window: '11:30–11:45', time: '11:30', label: 'Specimens', dest: 'James River Ref. Lab', kind: 'spec' },
+      { id: 'pm', type: 'Routine specimens', days: 'Mon–Fri', dayIdx: [0, 1, 2, 3, 4], window: '16:00–16:20', time: '16:00', label: 'Specimens', dest: 'James River Ref. Lab', kind: 'spec' },
+      { id: 'rmw', type: 'Medical waste', days: 'Tue, Fri', dayIdx: [1, 4], window: '09:00–11:00', time: '09:00', label: 'Medical waste', dest: 'Treatment facility', kind: 'rmw' },
+      { id: 'sup', type: 'Supply delivery', days: 'Mon', dayIdx: [0], window: '08:30–09:00', time: '08:30', label: 'Supplies', dest: 'Westpark Family Medicine', kind: 'sup' }
+    ];
+    const itemStyle = k => 'font-size:13px;padding:4px 8px;border-radius:2px;' + ({ spec: 'background:#EEF4FA;border:1px solid #9DBAD6;color:#14406A', rmw: 'background:#FFF4DC;border:1px solid #E0B45C;color:#5C3300', sup: 'background:#F2F4F6;border:1px solid #C9D3DD;color:#2E3A48' })[k];
+    const names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const week = names.map((day, i) => ({
+      day,
+      items: defs.filter(d => !p[d.id] && d.dayIdx.indexOf(i) >= 0).sort((a, b) => a.time < b.time ? -1 : 1).map(d => ({ time: d.time, label: d.label, style: itemStyle(d.kind) }))
+    }));
+    const orders = defs.map((d, i) => ({
+      type: d.type, days: d.days, window: d.window, dest: d.dest,
+      status: p[d.id] ? 'Paused' : 'Active',
+      statusStyle: p[d.id] ? chip('#F2F4F6', '#3A4654', '#C9D3DD') : chip('#EAF5EC', '#1E5B2C', '#7FB48D'),
+      action: p[d.id] ? 'Resume' : 'Pause',
+      toggle: () => this.setState({ paused: { ...p, [d.id]: !p[d.id] } }),
+      rowStyle: 'border-bottom:1px solid #E1E6EB;background:' + (i % 2 ? '#F7F9FB' : '#FFFFFF')
+    }));
+    return { week, orders, activeCount: defs.filter(d => !p[d.id]).length };
+  }
+}
+</script>
+<script src="dc-lite.js"></script>
+</body>
+</html>
