@@ -3,5 +3,5 @@
    Restrict the key to your site's address (e.g. https://your-project.pages.dev/*) in Google Cloud.
    Leave it empty to show a plain Google map of the Richmond area. */
 window.MEDROUTE_CONFIG = {
-  googleMapsApiKey: ''
+  googleMapsApiKey: 'AIzaSyCIbzyMLpTfxVxZimqadhBrIg4lrvAkS3s'
 };
