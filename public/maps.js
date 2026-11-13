@@ -59,7 +59,9 @@
     if (slot && holder.parentNode !== slot) slot.appendChild(holder);
   };
 
-  if (!key) {
+  // Plain Google map (no key needed). Also used when Google rejects the key.
+  function showEmbed(message) {
+    holder.replaceChildren();
     const f = document.createElement('iframe');
     f.title = view.embedTitle;
     f.src = view.embed;
@@ -67,19 +69,32 @@
     f.loading = 'lazy';
     f.referrerPolicy = 'no-referrer-when-downgrade';
     holder.appendChild(f);
-    if (viewName === 'dispatch') {
+    if (message) {
       const note = document.createElement('div');
-      note.textContent = 'Add a Google Maps API key in config.js to show live routes and vehicles.';
-      note.style.cssText = 'position:absolute;left:8px;top:8px;background:#FFF4DC;border:1px solid #E0B45C;color:#5C3300;font:600 12px "Source Sans 3",Arial,sans-serif;padding:4px 8px';
+      note.textContent = message;
+      note.style.cssText = 'position:absolute;left:8px;right:8px;top:8px;width:fit-content;max-width:calc(100% - 16px);background:#FFF4DC;border:1px solid #E0B45C;color:#5C3300;font:600 12px "Source Sans 3",Arial,sans-serif;padding:4px 8px';
       holder.appendChild(note);
     }
+  }
+
+  if (!key) {
+    showEmbed(viewName === 'dispatch' ? 'Add a Google Maps API key in config.js to show live routes and vehicles.' : '');
     return;
   }
+
+  // Google calls this when it rejects the key (wrong website restriction, API off, no billing...).
+  window.gm_authFailure = function () {
+    console.warn('MedRoute map: Google rejected the API key. See the Google Maps error above for the reason.');
+    showEmbed('Live map unavailable (API key problem). Showing basic map.');
+  };
 
   window.initMedrouteMap = function () {
     const g = google.maps;
     const ll = p => ({ lat: p[0], lng: p[1] });
-    const map = new g.Map(holder, {
+    const mapDiv = document.createElement('div');
+    mapDiv.style.cssText = 'position:absolute;inset:0';
+    holder.replaceChildren(mapDiv);
+    const map = new g.Map(mapDiv, {
       center: ll(view.center), zoom: view.zoom, mapTypeControl: false, streetViewControl: false,
       fullscreenControl: viewName !== 'driver',
       styles: [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }]
